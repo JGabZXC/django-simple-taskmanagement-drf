@@ -9,7 +9,21 @@ from .serializers import TaskSerializer
 # Create your views here.
 class TaskAV(APIView):
     def get(self, request):
-        tasks = Task.objects.all()
+        status_param = request.query_params.get('status')
+        print(status)
+        status_map = {
+            'pending': 1,
+            'in_progress': 2,
+            'done': 3,
+        }
+        if status_param:
+            internal_status = status_map.get(status_param.lower())
+            if internal_status:
+                tasks = Task.objects.filter(status=internal_status)
+            else:
+                tasks = Task.objects.all()
+        else:
+            tasks = Task.objects.all()
         serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

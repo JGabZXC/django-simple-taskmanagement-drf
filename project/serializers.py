@@ -11,7 +11,6 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def validate_name(self, value):
-        print("Validating name:", value)
         if len(value) < 3:
             raise serializers.ValidationError('Name must be at least 3 characters long')
 

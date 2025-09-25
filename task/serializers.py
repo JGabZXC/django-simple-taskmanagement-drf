@@ -12,6 +12,16 @@ class StatusField(serializers.Field):
         }
         return status_map.get(value, 'Unknown')
 
+    def to_internal_value(self, data):
+        status_map = {
+            'pending': 1,
+            'in_progress': 2,
+            'done': 3,
+        }
+        if data not in status_map:
+            raise serializers.ValidationError(f"Invalid status: {data}")
+        return status_map[data]
+
 class TaskSerializer(serializers.ModelSerializer):
     status = StatusField()
 
